@@ -1,12 +1,35 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import DeleteModal from "../../Modal/DeleteModal";
-const CustomerOrderDataRow = ({ order }) => {
+import axios from "axios";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import toast from "react-hot-toast";
+const CustomerOrderDataRow = ({ order, refetch }) => {
   let [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
   console.log(order);
-  const { quantity, status, price } = order;
-
+  const { _id, name, image, category, quantity, status, price, plantId } =
+    order;
+  const axiosSecure = useAxiosSecure();
+  //handle order delete
+  const handleOrderDelete = async () => {
+    try {
+      console.log(_id);
+      const { data } = await axiosSecure.delete(`/orders/${_id}`);
+      if (data.deletedCount > 0) {
+        await axiosSecure.patch(`/plants/quantity/${plantId}`, {
+          quantityToUpdate: quantity,
+          status: "increase",
+        });
+      }
+      refetch();
+    } catch (err) {
+      console.log(err);
+      toast.error(err.response.data);
+    } finally {
+      closeModal();
+    }
+  };
   return (
     <tr>
       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -15,7 +38,7 @@ const CustomerOrderDataRow = ({ order }) => {
             <div className="block relative">
               <img
                 alt="profile"
-                src="https://i.ibb.co.com/rMHmQP2/money-plant-in-feng-shui-brings-luck.jpg"
+                src={image}
                 className="mx-auto object-cover rounded h-10 w-15 "
               />
             </div>
@@ -24,19 +47,19 @@ const CustomerOrderDataRow = ({ order }) => {
       </td>
 
       <td className="table-data">
-        <p className="table-row">Money Plant</p>
+        <p className="table-row">{name}</p>
       </td>
       <td className="table-data">
-        <p className="table-row">Indoor</p>
+        <p className="table-row">{category}</p>
       </td>
       <td className="table-data">
-        <p className="table-row">$120</p>
+        <p className="table-row">${price}</p>
       </td>
       <td className="table-data">
-        <p className="table-row">5</p>
+        <p className="table-row">{quantity}</p>
       </td>
       <td className="table-data">
-        <p className="table-row">Pending</p>
+        <p className="table-row">{status}</p>
       </td>
 
       <td className="table-data">
@@ -48,7 +71,11 @@ const CustomerOrderDataRow = ({ order }) => {
           <span className="relative cursor-pointer">Cancel</span>
         </button>
 
-        <DeleteModal isOpen={isOpen} closeModal={closeModal} />
+        <DeleteModal
+          handleDelete={handleOrderDelete}
+          isOpen={isOpen}
+          closeModal={closeModal}
+        />
       </td>
     </tr>
   );

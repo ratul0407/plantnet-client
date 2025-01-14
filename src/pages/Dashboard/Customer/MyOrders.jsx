@@ -2,7 +2,6 @@ import { Helmet } from "react-helmet-async";
 import CustomerOrderDataRow from "../../../components/Dashboard/TableRows/CustomerOrderDataRow";
 import useAuth from "../../../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyOrders = () => {
@@ -61,7 +60,11 @@ const MyOrders = () => {
                   {orders?.map((order) => {
                     console.log(order);
                     return (
-                      <CustomerOrderDataRow key={order._id} order={order} />
+                      <CustomerOrderDataRow
+                        key={order._id}
+                        order={order}
+                        refetch={refetch}
+                      />
                     );
                   })}
                 </tbody>
