@@ -1,10 +1,10 @@
 import { Helmet } from "react-helmet-async";
 import AddPlantForm from "../../../components/Form/AddPlantForm";
-import imageUpload from "../../../api/utils";
 import useAuth from "../../../hooks/useAuth";
 import { useState } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
+import { imageUpload } from "../../../api/utils";
 
 const AddPlant = () => {
   const [uploadBtnText, setUploadBtnText] = useState("Upload Image");
