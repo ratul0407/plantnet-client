@@ -99,7 +99,13 @@ export const router = createBrowserRouter([
       },
       {
         path: "manage-orders",
-        element: <ManageOrders />,
+        element: (
+          <PrivateRoute>
+            <SellerRoute>
+              <ManageOrders />
+            </SellerRoute>
+          </PrivateRoute>
+        ),
       },
     ],
   },
