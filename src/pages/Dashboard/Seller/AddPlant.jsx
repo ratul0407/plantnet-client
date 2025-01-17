@@ -5,11 +5,13 @@ import { useState } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { imageUpload } from "../../../api/utils";
+import { useNavigate } from "react-router-dom";
 
 const AddPlant = () => {
   const [uploadBtnText, setUploadBtnText] = useState("Upload Image");
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
   //handle form submit
 
@@ -49,6 +51,7 @@ const AddPlant = () => {
     try {
       await axiosSecure.post(`/plants`, plantData);
       toast.success("Data added Successfully!");
+      navigate("/dashboard/my-inventory");
     } catch (err) {
       console.log(err);
     } finally {

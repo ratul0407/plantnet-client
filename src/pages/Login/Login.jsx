@@ -8,11 +8,11 @@ import { saveUser } from "../../api/utils";
 
 const Login = () => {
   const { signIn, signInWithGoogle, loading, user } = useAuth();
+  if (loading) return <LoadingSpinner />;
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from?.pathname || "/";
   if (user) return <Navigate to={from} replace={true} />;
-  if (loading) return <LoadingSpinner />;
   // form submit handler
   const handleSubmit = async (event) => {
     event.preventDefault();
